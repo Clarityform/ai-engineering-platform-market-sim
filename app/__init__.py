@@ -1,5 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+from app.auth_routes import router as auth_router
+from app.routes import router as api_router
 
-# Keep this file intentionally lightweight to support the app structure.
+__all__ = ["api_router", "auth_router"]

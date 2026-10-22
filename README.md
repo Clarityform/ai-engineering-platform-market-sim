@@ -1,18 +1,14 @@
 # AI Engineering Platform Prototype
 
-This repository now includes a real executable prototype with a functional API layer and persistent SQLite-backed data storage. It steps beyond a static narrative and provides runnable product primitives for repos, issues, pull requests, tasks, and AI planning.
+This repository now contains a stronger real prototype foundation with a more product-like structure. It includes:
 
-## What is included
-
-- FastAPI backend
-- SQLite data layer
-- repo CRUD workflow
-- issue management
-- pull request flow
-- task management
-- AI plan generation
-- health and metrics endpoints
-- mounted API architecture for a more realistic app layout
+- FastAPI app layering
+- SQLite-backed persistence
+- repo, issue, pull request, and task workflows
+- AI planning endpoint
+- auth flow with demo token login
+- dashboard summary endpoint
+- a lightweight web dashboard entry point for prototype visibility
 
 ## Run locally
 
@@ -31,31 +27,36 @@ Then open:
 - http://localhost:8000/api/issues
 - http://localhost:8000/api/pulls
 - http://localhost:8000/api/tasks
-- http://localhost:8000/api/metrics
+- http://localhost:8000/api/ai/plans
+- http://localhost:8000/api/dashboard/summary
 
-## Example API calls
+## Demo auth
 
 ```bash
-curl -X POST "http://localhost:8000/api/repos?owner=demo&name=ai-platform&visibility=private&description=prototype%20repo"
-curl -X POST "http://localhost:8000/api/tasks?repo_id=repo-1&title=Add%20summary%20endpoint&description=Create%20summary%20task"
-curl -X POST "http://localhost:8000/api/ai/plan?repo_id=repo-1&task_title=Add%20summary%20endpoint&description=Create%20summary%20task"
+curl -X POST "http://localhost:8000/api/auth/login?username=demo&password=demo123"
+```
+
+Then use the token in the Authorization header:
+
+```bash
+curl -H "Authorization: Bearer <TOKEN>" http://localhost:8000/api/auth/me
 ```
 
 ## Current maturity
 
-This is a real prototype foundation, not a finished production platform. It is a meaningful next step beyond a static market document and is now clearly in executable product territory.
+This is a real prototype foundation, not a production-grade platform. It is materially stronger than a static market simulation and is now in a credible executable prototype stage.
 
-## Next real engineering stages
+## Next real stages
 
-- user authentication
-- branch and merge logic
-- CI/CD workflow adapter
-- dashboard UI
-- stronger deployment model
-- release and environment management
-- policy and governance layer
-- secure enterprise configuration
+- multi-user sessions and real auth persistence
+- branch, commit, and merge models
+- release and environment tracking
+- CI/CD integration
+- richer dashboard UI
+- policy and governance controls
+- full backend persistence and migrations
+- deployment orchestration
 
 ## Bottom line
 
-This project is now significantly stronger as a working prototype and is approaching the level of a credible platform foundation.
+This repository is now substantially beyond a static strategy document and is closer to a real product foundation for an AI Engineering Platform.
