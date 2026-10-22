@@ -1,10 +1,35 @@
 from __future__ import annotations
 
+from typing import Any, Dict, List, Optional
+
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 from app.store import store
 
-app = FastAPI(title="AI Engineering Platform", version="0.1.0")
+app = FastAPI(title="AI Engineering Platform", version="0.2.0")
+
+
+@app.get("/")
+def index() -> HTMLResponse:
+    return HTMLResponse(
+        """
+        <html>
+          <head><title>AI Engineering Platform</title></head>
+          <body>
+            <h1>AI Engineering Platform</h1>
+            <ul>
+              <li><a href="/health">/health</a></li>
+              <li><a href="/metrics">/metrics</a></li>
+              <li><a href="/repos">/repos</a></li>
+              <li><a href="/issues">/issues</a></li>
+              <li><a href="/pulls">/pulls</a></li>
+              <li><a href="/tasks">/tasks</a></li>
+            </ul>
+          </body>
+        </html>
+        """
+    )
 
 
 @app.get("/health")
@@ -35,7 +60,7 @@ def create_repo(owner: str, name: str, visibility: str = "private", description:
 @app.get("/repos/{repo_id}")
 def get_repo(repo_id: str) -> dict:
     repo = store.get_repo(repo_id)
-    if not repo:
+    if repo is None:
         raise ValueError("repo not found")
     return repo
 
@@ -74,6 +99,11 @@ def list_tasks() -> list:
 @app.post("/tasks")
 def create_task(repo_id: str, title: str, description: str) -> dict:
     return store.create_task(repo_id=repo_id, title=title, description=description)
+
+
+@app.get("/ai/plans")
+def list_ai_plans() -> list:
+    return store.list_ai_plans()
 
 
 @app.post("/ai/plan")
