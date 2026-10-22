@@ -22,6 +22,16 @@ def metrics() -> dict:
     return store.health_metrics()
 
 
+@router.get("/dashboard/overview")
+def dashboard_overview() -> dict:
+    return store.dashboard_overview()
+
+
+@router.get("/analytics/release-readiness")
+def release_readiness() -> dict:
+    return store.release_readiness()
+
+
 @router.get("/repos")
 def list_repos() -> list:
     return store.list_repos()

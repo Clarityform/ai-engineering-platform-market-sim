@@ -9,6 +9,7 @@ from app.db import get_connection
 class SQLiteStore:
     def __init__(self) -> None:
         self.seed_default_repo()
+        self.seed_demo_platform_data()
 
     def seed_default_repo(self) -> None:
         if self.get_repo_by_name("platform-demo", "demo") is None:
@@ -18,6 +19,54 @@ class SQLiteStore:
                 visibility="private",
                 description="AI Engineering Platform prototype",
             )
+
+    def seed_demo_platform_data(self) -> None:
+        if self.list_projects():
+            return
+        repo = self.get_repo_by_name("platform-demo", "demo")
+        if not repo:
+            return
+
+        self.create_project(
+            name="AI Delivery Platform",
+            repo_id=repo["id"],
+            owner="demo",
+            description="Main platform initiative for AI software delivery orchestration.",
+        )
+        self.create_project(
+            name="Developer Experience",
+            repo_id=repo["id"],
+            owner="demo",
+            description="Developer workflow acceleration and repo intelligence improvements.",
+        )
+        self.create_release(
+            project_id=self.list_projects()[0]["id"],
+            version="v0.4.0",
+            status="active",
+            notes="Prototype launch with governance and planning instrumentation.",
+        )
+        self.create_environment(
+            name="prod",
+            stage="production",
+            url="https://platform.example.com",
+            status="active",
+        )
+        self.create_environment(
+            name="staging",
+            stage="staging",
+            url="https://staging.platform.example.com",
+            status="active",
+        )
+        self.create_policy(
+            name="release-gate",
+            kind="deployment-policy",
+            rules="require approvals, risk review, and smoke tests before release",
+        )
+        self.create_policy(
+            name="security-scan",
+            kind="security-policy",
+            rules="mandatory vulnerability scan and signed review for production changes",
+        )
 
     def get_repo_by_name(self, name: str, owner: str) -> Optional[Dict[str, Any]]:
         with get_connection() as conn:
@@ -240,6 +289,47 @@ class SQLiteStore:
         with get_connection() as conn:
             rows = conn.execute("SELECT * FROM governance_policies ORDER BY id").fetchall()
         return [dict(row) for row in rows]
+
+    def dashboard_overview(self) -> Dict[str, Any]:
+        metrics = self.health_metrics()
+        projects = self.list_projects()
+        releases = self.list_releases()
+        environments = self.list_environments()
+        policies = self.list_policies()
+        overview = {
+            "metrics": metrics,
+            "projects": projects,
+            "releases": releases,
+            "environments": environments,
+            "policies": policies,
+            "status": "operational",
+            "readiness": {
+                "platform": "prototype-ready",
+                "release_gate": "enabled",
+                "governance": "enabled",
+                "ci": "pending",
+                "deployment": "pending",
+            },
+        }
+        return overview
+
+    def release_readiness(self) -> Dict[str, Any]:
+        releases = self.list_releases()
+        readiness = []
+        for item in releases:
+            readiness.append({
+                "project_id": item["project_id"],
+                "version": item["version"],
+                "status": item["status"],
+                "is_ready": item["status"] in {"active", "planned"},
+                "checks": [
+                    "code review",
+                    "risk review",
+                    "smoke test",
+                    "governance approval",
+                ],
+            })
+        return {"releases": readiness, "overall_score": 86}
 
     def summarize(self, repo_id: str, title: str) -> Dict[str, Any]:
         repo = self.get_repo(repo_id)
