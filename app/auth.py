@@ -1,58 +1,62 @@
-from __future__ import annotations
-
-import base64
-import hashlib
-import hmac
-import json
-import os
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict
 
-SECRET_KEY = os.environ.get("APP_SECRET_KEY", "ai-platform-demo-secret")
+from jose import jwt, JWTError
+from passlib.context import CryptContext
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-USERS: Dict[str, Dict[str, str]] = {
-    "demo": {"id": "user-demo", "username": "demo", "role": "admin", "password": "demo123"},
-}
+from app.config import get_settings
+from app.database import get_db
+from app.models import User
+
+settings = get_settings()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
-def _b64url_encode(data: bytes) -> str:
-    return base64.urlsafe_b64encode(data).decode("utf-8").rstrip("=")
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
 
 
-def _b64url_decode(value: str) -> bytes:
-    padding = "=" * (-len(value) % 4)
-    return base64.urlsafe_b64decode((value + padding).encode("utf-8"))
+def verify_password(password: str, password_hash: str) -> bool:
+    return pwd_context.verify(password, password_hash)
 
 
-def create_token(username: str) -> str:
+def create_access_token(user: User) -> str:
+    now = datetime.now(timezone.utc)
     payload = {
-        "sub": username,
-        "role": USERS[username]["role"],
-        "exp": int((datetime.now(timezone.utc) + timedelta(hours=12)).timestamp()),
+        "sub": str(user.id),
+        "role": user.role,
+        "iat": now,
+        "exp": now + timedelta(minutes=settings.access_token_minutes),
     }
-    encoded = _b64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
-    signature = hmac.new(SECRET_KEY.encode("utf-8"), encoded.encode("utf-8"), hashlib.sha256).hexdigest()
-    return f"{encoded}.{signature}"
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
-def verify_token(token: str) -> Dict[str, Any]:
-    if not token or "." not in token:
-        raise ValueError("invalid token")
-    encoded, signature = token.split(".", 1)
-    expected = hmac.new(SECRET_KEY.encode("utf-8"), encoded.encode("utf-8"), hashlib.sha256).hexdigest()
-    if not hmac.compare_digest(signature, expected):
-        raise ValueError("invalid signature")
+async def current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
+    error = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid or expired credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+        user_id = int(payload.get("sub", ""))
+    except (JWTError, ValueError, TypeError):
+        raise error
 
-    payload = json.loads(_b64url_decode(encoded).decode("utf-8"))
-    if int(payload["exp"]) < int(datetime.now(timezone.utc).timestamp()):
-        raise ValueError("token expired")
-    return payload
+    user = await db.get(User, user_id)
+    if not user:
+        raise error
+    return user
 
 
-def authenticate(username: str, password: str) -> Optional[Dict[str, str]]:
-    user = USERS.get(username)
-    if user is None:
-        return None
-    if user["password"] != password:
-        return None
-    return {"id": user["id"], "username": user["username"], "role": user["role"]}
+def require_roles(*roles: str):
+    async def dependency(user: User = Depends(current_user)) -> User:
+        if user.role not in roles:
+            raise HTTPException(status_code=403, detail="Insufficient role")
+        return user
+
+    return dependency

@@ -1,5 +1,5 @@
-from __future__ import annotations
+from app.config import get_settings
 
-from app.root import app
+settings = get_settings()
 
-__all__ = ["app"]
+__all__ = ["settings"]

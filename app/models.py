@@ -1,97 +1,108 @@
-from __future__ import annotations
+from datetime import datetime, timezone
 
-from typing import Any, Dict, List, Optional
+from sqlalchemy import String, Text, DateTime, ForeignKey, Float, Boolean, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from pydantic import BaseModel, Field
-
-
-class RepoCreate(BaseModel):
-    owner: str = Field(..., min_length=1)
-    name: str = Field(..., min_length=1)
-    visibility: str = Field(default="private")
-    description: Optional[str] = None
+from app.database import Base
 
 
-class Repo(BaseModel):
-    id: str
-    owner: str
-    name: str
-    visibility: str
-    default_branch: str = "main"
-    description: Optional[str] = None
+def now_utc():
+    return datetime.now(timezone.utc)
 
 
-class IssueCreate(BaseModel):
-    repo_id: str = Field(..., min_length=1)
-    title: str = Field(..., min_length=1)
-    body: Optional[str] = None
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(320), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(255))
+    role: Mapped[str] = mapped_column(String(24), default="DEVELOPER")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
-class Issue(BaseModel):
-    id: str
-    repo_id: str
-    title: str
-    body: str = ""
-    state: str = "open"
+class Repository(Base):
+    __tablename__ = "repositories"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), index=True)
+    provider: Mapped[str] = mapped_column(String(24), default="LOCAL")
+    external_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    default_branch: Mapped[str] = mapped_column(String(120), default="main")
+    description: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
-class PullRequestCreate(BaseModel):
-    repo_id: str = Field(..., min_length=1)
-    title: str = Field(..., min_length=1)
-    source_branch: str = Field(..., min_length=1)
-    target_branch: str = Field(..., min_length=1)
-    body: Optional[str] = None
+class Branch(Base):
+    __tablename__ = "branches"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    repository_id: Mapped[int] = mapped_column(ForeignKey("repositories.id", ondelete="CASCADE"), index=True)
+    name: Mapped[str] = mapped_column(String(120))
+    protected: Mapped[bool] = mapped_column(Boolean, default=False)
+    head_sha: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
 
-class PullRequest(BaseModel):
-    id: str
-    repo_id: str
-    title: str
-    source_branch: str
-    target_branch: str
-    body: str = ""
-    state: str = "open"
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(240))
+    description: Mapped[str] = mapped_column(Text, default="")
+    status: Mapped[str] = mapped_column(String(24), default="BACKLOG")
+    priority: Mapped[str] = mapped_column(String(16), default="MEDIUM")
+    repository_id: Mapped[int | None] = mapped_column(ForeignKey("repositories.id"), nullable=True)
+    owner_email: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
-class TaskCreate(BaseModel):
-    repo_id: str = Field(..., min_length=1)
-    title: str = Field(..., min_length=1)
-    description: str = Field(..., min_length=1)
+class PullRequest(Base):
+    __tablename__ = "pull_requests"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    repository_id: Mapped[int] = mapped_column(ForeignKey("repositories.id"), index=True)
+    number: Mapped[int]
+    title: Mapped[str] = mapped_column(String(240))
+    state: Mapped[str] = mapped_column(String(24), default="OPEN")
+    source_branch: Mapped[str] = mapped_column(String(120))
+    target_branch: Mapped[str] = mapped_column(String(120), default="main")
+    checks_passed: Mapped[bool] = mapped_column(Boolean, default=False)
+    review_approved: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
-class Task(BaseModel):
-    id: str
-    repo_id: str
-    title: str
-    description: str
-    status: str = "queued"
+class Environment(Base):
+    __tablename__ = "environments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(80), unique=True)
+    kind: Mapped[str] = mapped_column(String(24), default="LOCAL")
+    protected: Mapped[bool] = mapped_column(Boolean, default=True)
+    requires_approval: Mapped[bool] = mapped_column(Boolean, default=True)
 
 
-class AIPlanCreate(BaseModel):
-    repo_id: str = Field(..., min_length=1)
-    task_title: str = Field(..., min_length=1)
-    description: str = Field(..., min_length=1)
+class Deployment(Base):
+    __tablename__ = "deployments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    environment_id: Mapped[int] = mapped_column(ForeignKey("environments.id"), index=True)
+    repository_id: Mapped[int] = mapped_column(ForeignKey("repositories.id"), index=True)
+    version: Mapped[str] = mapped_column(String(120))
+    status: Mapped[str] = mapped_column(String(24), default="PLANNED")
+    coverage: Mapped[float] = mapped_column(Float, default=0.0)
+    risk: Mapped[float] = mapped_column(Float, default=0.5)
+    compliance: Mapped[float] = mapped_column(Float, default=0.5)
+    health: Mapped[float] = mapped_column(Float, default=0.5)
+    readiness_score: Mapped[float] = mapped_column(Float, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
-class AIPlan(BaseModel):
-    id: str
-    repo_id: str
-    task_title: str
-    description: str
-    steps: List[str]
-    risk_score: float
-    confidence: float
+class AIPlan(Base):
+    __tablename__ = "ai_plans"
 
-
-class SummaryRequest(BaseModel):
-    repo_id: str = Field(..., min_length=1)
-    title: str = Field(..., min_length=1)
-
-
-class SummaryResult(BaseModel):
-    repo_id: str
-    repo_name: str
-    title: str
-    summary: str
-    risk_level: str
-    delivery_score: int
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(240))
+    input_text: Mapped[str] = mapped_column(Text)
+    summary: Mapped[str] = mapped_column(Text)
+    risks_json: Mapped[str] = mapped_column(Text, default="[]")
+    recommendations_json: Mapped[str] = mapped_column(Text, default="[]")
+    provider: Mapped[str] = mapped_column(String(40), default="HEURISTIC_LOCAL")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)

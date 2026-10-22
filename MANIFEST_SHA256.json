@@ -1,0 +1,23 @@
+{
+  ".env.example": "614033911ce10ac4fbdf33beffda4cfe6e72170bd5ae04f173f4378bbfd9ad42",
+  "Dockerfile": "b98f9507bf7fd2705bbe11dd210ecee4e1034befef0827ffaf91b685b390c694",
+  "README.md": "757ba9b964f8c44b7dbc24db842e97c586b2b4c8ad137f051eca1ffaf6566c5d",
+  "app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "app/adapters.py": "ac2be4e8823e6375c82684da869feee6dc36a403d1cd0e9a3a9f6edfd1fe4019",
+  "app/ai_engine.py": "bb3cf4f280a606bfef78f939c3c041f5d64b86353291d51cca3edc1691f1b744",
+  "app/auth.py": "0294b03e28ba19592b34c1e43d4c008c3fd199d6fc638664af5ae9710a5e6919",
+  "app/config.py": "1745d7f6338e5ad9e44eeedacd4c7bf997a18d7d284d6ef49c4ed736b4a8e59d",
+  "app/database.py": "c27329f18f950a741d757fa3bec1800b54c427f851f7a9c32e7ee93b340b52f6",
+  "app/main.py": "532382bbcfb830c883f85a2bb7b5c3449e5fa6ba43fca3c4ec9abd7846733b48",
+  "app/models.py": "d72f22aa6c8c7da1f327f14d6dbb34138af2465f9a700f058d1cdd6cb29cdd41",
+  "app/routers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "app/routers/auth.py": "803c077fbc680282342037114c25c56e0f9f01b1b7b4b50109a06724917c2cf3",
+  "app/routers/core.py": "1ed445be2a38af86cbf9e2f24e76ccb2c95fa97fb51078ce5bd04ddf78e8fc4d",
+  "app/schemas.py": "bbc056dfcf1bf1a9fa6980753fc66187135e92d604f9c5fdad05f4719df1c09c",
+  "app/services.py": "0c27ce112472c85907ec39bae9017d2bace2d783ba34bdd44f6ab0748889b3",
+  "docker-compose.yml": "a01c76f598c3b9641bb6620dc5c6ced100ae57a32f9675c91992bd8f75cdd434",
+  "pytest.ini": "fd73cfe5a6cd5d79cbccc2ebe4fed0936b0fa975d58d2fda5a3aaffcb673a1d0",
+  "requirements.txt": "88e7646b903a34dd1d5742681950ae1a39f2a79758ffa3e4714851b91aa444c1",
+  "tests/conftest.py": "aa55bfe9f682b245d40c7317b694de2226d8cd909663592cf2cecadd2322563e",
+  "tests/test_core.py": "e65ea5a36e28afcdd12124d8f5f48177e7b9edd6873446e42ca9527514d563af"
+}

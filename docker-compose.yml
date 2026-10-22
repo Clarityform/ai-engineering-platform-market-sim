@@ -1,14 +1,17 @@
 version: "3.9"
 
 services:
-  ai-engineering-platform:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ai-engineering-platform
+  api:
+    build: .
     ports:
       - "8000:8000"
     environment:
-      APP_SECRET_KEY: "demo-secret-key"
-      PORT: "8000"
+      ENVIRONMENT: local
+      DATABASE_URL: sqlite+aiosqlite:///./data/forgeops.db
+      JWT_SECRET: ${JWT_SECRET:-LOCAL-ONLY-CHANGE-ME}
+    volumes:
+      - forgeops_data:/srv/app/data
     restart: unless-stopped
+
+volumes:
+  forgeops_data:
