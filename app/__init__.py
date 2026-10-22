@@ -1,5 +1,5 @@
 from __future__ import annotations
 
-from app.main import app
+from pathlib import Path
 
-__all__ = ["app"]
+# Keep this file intentionally lightweight to support the app structure.
