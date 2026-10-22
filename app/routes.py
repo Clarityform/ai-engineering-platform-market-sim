@@ -101,3 +101,51 @@ def summarize(repo_id: str, title: str) -> dict:
     if not repo_id or not title:
         raise HTTPException(status_code=400, detail="repo_id and title are required")
     return store.summarize(repo_id=repo_id, title=title)
+
+
+@router.get("/projects")
+def list_projects() -> list:
+    return store.list_projects()
+
+
+@router.post("/projects")
+def create_project(name: str, repo_id: str, owner: str, description: str | None = None) -> dict:
+    if not name or not repo_id or not owner:
+        raise HTTPException(status_code=400, detail="name, repo_id, and owner are required")
+    return store.create_project(name=name, repo_id=repo_id, owner=owner, description=description)
+
+
+@router.get("/releases")
+def list_releases() -> list:
+    return store.list_releases()
+
+
+@router.post("/releases")
+def create_release(project_id: str, version: str, status: str = "planned", notes: str | None = None) -> dict:
+    if not project_id or not version:
+        raise HTTPException(status_code=400, detail="project_id and version are required")
+    return store.create_release(project_id=project_id, version=version, status=status, notes=notes)
+
+
+@router.get("/environments")
+def list_environments() -> list:
+    return store.list_environments()
+
+
+@router.post("/environments")
+def create_environment(name: str, stage: str, url: str, status: str = "active") -> dict:
+    if not name or not stage or not url:
+        raise HTTPException(status_code=400, detail="name, stage, and url are required")
+    return store.create_environment(name=name, stage=stage, url=url, status=status)
+
+
+@router.get("/policies")
+def list_policies() -> list:
+    return store.list_policies()
+
+
+@router.post("/policies")
+def create_policy(name: str, kind: str, rules: str) -> dict:
+    if not name or not kind or not rules:
+        raise HTTPException(status_code=400, detail="name, kind, and rules are required")
+    return store.create_policy(name=name, kind=kind, rules=rules)

@@ -161,15 +161,95 @@ class SQLiteStore:
             })
         return results
 
+    def create_project(self, name: str, repo_id: str, owner: str, description: Optional[str]) -> Dict[str, Any]:
+        project_id = f"project-{self._next_id('projects')}"
+        with get_connection() as conn:
+            conn.execute(
+                "INSERT INTO projects (id, name, repo_id, owner, description, status) VALUES (?, ?, ?, ?, ?, ?)",
+                (project_id, name, repo_id, owner, description or "", "active"),
+            )
+            conn.commit()
+        return self.get_project(project_id)
+
+    def get_project(self, project_id: str) -> Optional[Dict[str, Any]]:
+        with get_connection() as conn:
+            row = conn.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
+        return dict(row) if row is not None else None
+
+    def list_projects(self) -> List[Dict[str, Any]]:
+        with get_connection() as conn:
+            rows = conn.execute("SELECT * FROM projects ORDER BY id").fetchall()
+        return [dict(row) for row in rows]
+
+    def create_release(self, project_id: str, version: str, status: str, notes: Optional[str]) -> Dict[str, Any]:
+        release_id = f"release-{self._next_id('releases')}"
+        with get_connection() as conn:
+            conn.execute(
+                "INSERT INTO releases (id, project_id, version, status, notes) VALUES (?, ?, ?, ?, ?)",
+                (release_id, project_id, version, status, notes or ""),
+            )
+            conn.commit()
+        return self.get_release(release_id)
+
+    def get_release(self, release_id: str) -> Optional[Dict[str, Any]]:
+        with get_connection() as conn:
+            row = conn.execute("SELECT * FROM releases WHERE id = ?", (release_id,)).fetchone()
+        return dict(row) if row is not None else None
+
+    def list_releases(self) -> List[Dict[str, Any]]:
+        with get_connection() as conn:
+            rows = conn.execute("SELECT * FROM releases ORDER BY id").fetchall()
+        return [dict(row) for row in rows]
+
+    def create_environment(self, name: str, stage: str, url: str, status: str) -> Dict[str, Any]:
+        env_id = f"env-{self._next_id('environments')}"
+        with get_connection() as conn:
+            conn.execute(
+                "INSERT INTO environments (id, name, stage, url, status) VALUES (?, ?, ?, ?, ?)",
+                (env_id, name, stage, url, status),
+            )
+            conn.commit()
+        return self.get_environment(env_id)
+
+    def get_environment(self, env_id: str) -> Optional[Dict[str, Any]]:
+        with get_connection() as conn:
+            row = conn.execute("SELECT * FROM environments WHERE id = ?", (env_id,)).fetchone()
+        return dict(row) if row is not None else None
+
+    def list_environments(self) -> List[Dict[str, Any]]:
+        with get_connection() as conn:
+            rows = conn.execute("SELECT * FROM environments ORDER BY id").fetchall()
+        return [dict(row) for row in rows]
+
+    def create_policy(self, name: str, kind: str, rules: str) -> Dict[str, Any]:
+        policy_id = f"policy-{self._next_id('governance_policies')}"
+        with get_connection() as conn:
+            conn.execute(
+                "INSERT INTO governance_policies (id, name, kind, rules, active) VALUES (?, ?, ?, ?, ?)",
+                (policy_id, name, kind, rules, 1),
+            )
+            conn.commit()
+        return self.get_policy(policy_id)
+
+    def get_policy(self, policy_id: str) -> Optional[Dict[str, Any]]:
+        with get_connection() as conn:
+            row = conn.execute("SELECT * FROM governance_policies WHERE id = ?", (policy_id,)).fetchone()
+        return dict(row) if row is not None else None
+
+    def list_policies(self) -> List[Dict[str, Any]]:
+        with get_connection() as conn:
+            rows = conn.execute("SELECT * FROM governance_policies ORDER BY id").fetchall()
+        return [dict(row) for row in rows]
+
     def summarize(self, repo_id: str, title: str) -> Dict[str, Any]:
         repo = self.get_repo(repo_id)
         return {
             "repo_id": repo_id,
             "repo_name": repo["name"] if repo else "unknown",
             "title": title,
-            "summary": "The task is scoped to repository health, engineering workflow, and delivery confidence. The recommended approach is small, testable iterations with explicit validation gates and risk review.",
+            "summary": "The task is scoped to repository health, engineering workflow, and delivery confidence. The recommended approach is small, testable iterations with explicit validation gates and release governance review.",
             "risk_level": "medium",
-            "delivery_score": 86,
+            "delivery_score": 88,
         }
 
     def health_metrics(self) -> Dict[str, Any]:
@@ -179,12 +259,20 @@ class SQLiteStore:
             pr_count = conn.execute("SELECT COUNT(*) AS c FROM pull_requests").fetchone()["c"]
             task_count = conn.execute("SELECT COUNT(*) AS c FROM tasks").fetchone()["c"]
             plan_count = conn.execute("SELECT COUNT(*) AS c FROM ai_plans").fetchone()["c"]
+            project_count = conn.execute("SELECT COUNT(*) AS c FROM projects").fetchone()["c"]
+            release_count = conn.execute("SELECT COUNT(*) AS c FROM releases").fetchone()["c"]
+            env_count = conn.execute("SELECT COUNT(*) AS c FROM environments").fetchone()["c"]
+            policy_count = conn.execute("SELECT COUNT(*) AS c FROM governance_policies").fetchone()["c"]
         return {
             "repos": repo_count,
             "issues": issue_count,
             "prs": pr_count,
             "tasks": task_count,
             "plans": plan_count,
+            "projects": project_count,
+            "releases": release_count,
+            "environments": env_count,
+            "policies": policy_count,
             "platform_status": "ready",
         }
 

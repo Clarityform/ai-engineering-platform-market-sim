@@ -1,79 +1,58 @@
 from __future__ import annotations
 
-import json
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+
+from app.db import get_connection
 
 DB_PATH = Path(__file__).resolve().parent.parent / "storage" / "platform.db"
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-
-def get_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
 def init_db() -> None:
     with get_connection() as conn:
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS repos (
+            CREATE TABLE IF NOT EXISTS projects (
                 id TEXT PRIMARY KEY,
-                owner TEXT NOT NULL,
                 name TEXT NOT NULL,
-                visibility TEXT NOT NULL,
-                default_branch TEXT NOT NULL,
-                description TEXT
+                repo_id TEXT NOT NULL,
+                owner TEXT NOT NULL,
+                description TEXT,
+                status TEXT NOT NULL DEFAULT 'active'
             )
             """
         )
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS issues (
+            CREATE TABLE IF NOT EXISTS releases (
                 id TEXT PRIMARY KEY,
-                repo_id TEXT NOT NULL,
-                title TEXT NOT NULL,
-                body TEXT,
-                state TEXT NOT NULL DEFAULT 'open'
+                project_id TEXT NOT NULL,
+                version TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'planned',
+                notes TEXT
             )
             """
         )
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS pull_requests (
+            CREATE TABLE IF NOT EXISTS environments (
                 id TEXT PRIMARY KEY,
-                repo_id TEXT NOT NULL,
-                title TEXT NOT NULL,
-                source_branch TEXT NOT NULL,
-                target_branch TEXT NOT NULL,
-                body TEXT,
-                state TEXT NOT NULL DEFAULT 'open'
+                name TEXT NOT NULL,
+                stage TEXT NOT NULL,
+                url TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'active'
             )
             """
         )
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS tasks (
+            CREATE TABLE IF NOT EXISTS governance_policies (
                 id TEXT PRIMARY KEY,
-                repo_id TEXT NOT NULL,
-                title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'queued'
-            )
-            """
-        )
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS ai_plans (
-                id TEXT PRIMARY KEY,
-                repo_id TEXT NOT NULL,
-                task_title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                steps TEXT NOT NULL,
-                risk_score REAL NOT NULL,
-                confidence REAL NOT NULL
+                name TEXT NOT NULL,
+                kind TEXT NOT NULL,
+                rules TEXT NOT NULL,
+                active INTEGER NOT NULL DEFAULT 1
             )
             """
         )
