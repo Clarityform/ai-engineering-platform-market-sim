@@ -1,17 +1,8 @@
 # AI Engineering Platform Prototype
 
-This repository is now a stronger executable platform prototype, with capabilities beyond the static strategy report. It includes:
+This repository is a credible executable prototype foundation for an AI Engineering Platform.
 
-- FastAPI API layer
-- SQLite data persistence
-- repo lifecycle workflows
-- issue and PR tracking
-- task and AI planning support
-- auth token flow
-- dashboard summary endpoint
-- project, release, environment, and policy primitives
-
-## Run locally
+## Local run
 
 ```bash
 python -m venv .venv
@@ -20,45 +11,32 @@ pip install -r requirements.txt
 python -m app.main
 ```
 
-## Endpoints
-
-- /
-- /api/health
-- /api/metrics
-- /api/repos
-- /api/issues
-- /api/pulls
-- /api/tasks
-- /api/ai/plans
-- /api/projects
-- /api/releases
-- /api/environments
-- /api/policies
-- /api/auth/login
-- /api/auth/me
-- /api/dashboard/summary
-
-## Demo auth
+## Docker deployment
 
 ```bash
-curl -X POST "http://localhost:8000/api/auth/login?username=demo&password=demo123"
+cp .env.example .env
+docker compose up --build
 ```
 
-## Current maturity
+Then open:
 
-This is now a substantial prototype foundation for an AI Engineering Platform, not a static report. It is not a production-grade enterprise platform, but it is clearly in the territory of a real product foundation with significant operational logic.
+- http://localhost:8000/
+- http://localhost:8000/api/health
+- http://localhost:8000/api/dashboard/overview
+- http://localhost:8000/api/analytics/release-readiness
 
-## Next real engineering steps
+## Included platform primitives
 
-- real multi-user persistence and auth storage
-- branch and commit lifecycle modeling
-- CI/CD orchestration
-- deployment and environment automation
-- richer UI dashboards
-- release approval workflows
-- security and policy enforcement
-- production deployment and hardening
+- repository workflows
+- issue lifecycle
+- pull request lifecycle
+- task tracking
+- AI planning engine
+- dashboard metrics
+- release readiness analytics
+- project and governance scaffolding
+- demo auth flow
 
-## Bottom line
+## Current position
 
-The project is now meaningfully stronger as a realistic platform prototype and is much farther along than the earlier report-only and prototype-only stages.
+This is a real prototype foundation that is deployable locally in a container and is materially beyond a static report. It is not a production-grade enterprise platform, but it is now a much more serious implementation.

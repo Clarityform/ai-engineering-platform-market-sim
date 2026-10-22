@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  ai-engineering-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-engineering-platform
+    ports:
+      - "8000:8000"
+    environment:
+      APP_SECRET_KEY: "demo-secret-key"
+      PORT: "8000"
+    restart: unless-stopped
