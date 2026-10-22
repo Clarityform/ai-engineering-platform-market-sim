@@ -1,0 +1,94 @@
+{
+  "buyers": [
+    {
+      "name": "Alicia Martin",
+      "company": "Sourcegraph",
+      "email": "acquisitions@sourcegraph.com",
+      "category": "Strategic dev-tool acquirer",
+      "current_stage_value": "USD 2M-8M",
+      "full_product_value": "USD 20M-60M",
+      "rationale": "Adjacency to code intelligence, repo understanding, and enterprise developer workflow value."
+    },
+    {
+      "name": "Emma Nguyen",
+      "company": "GitLab",
+      "email": "partnerships@gitlab.com",
+      "category": "Strategic developer platform buyer",
+      "current_stage_value": "USD 3M-10M",
+      "full_product_value": "USD 30M-90M",
+      "rationale": "Strong direct overlap with repo workflows, issue tracking, review, and CI/CD."
+    },
+    {
+      "name": "Daniel Rhodes",
+      "company": "Atlassian",
+      "email": "strategy@atlassian.com",
+      "category": "Workflow platform buyer",
+      "current_stage_value": "USD 2M-8M",
+      "full_product_value": "USD 20M-70M",
+      "rationale": "Adjacency to workflow, issue management, and software delivery."
+    },
+    {
+      "name": "Priya Shah",
+      "company": "CodeNova AI",
+      "email": "strategy@codenova.ai",
+      "category": "AI coding workflow buyer",
+      "current_stage_value": "USD 2M-8M",
+      "full_product_value": "USD 10M-20M",
+      "rationale": "Strong fit with AI-assisted development and workflow productivity."
+    },
+    {
+      "name": "Marco Leblanc",
+      "company": "Northstar Enterprise Group",
+      "email": "platform@northstarenterprise.ca",
+      "category": "Enterprise platform buyer",
+      "current_stage_value": "USD 2M-6M",
+      "full_product_value": "USD 10M-15M",
+      "rationale": "Strong fit for internal platform modernization, governance, and software delivery control."
+    },
+    {
+      "name": "Daniel Kim",
+      "company": "Harbor Growth Group",
+      "email": "deals@harborgrowthgroup.com",
+      "category": "PE / software roll-up buyer",
+      "current_stage_value": "USD 1M-5M",
+      "full_product_value": "USD 10M-14M",
+      "rationale": "Governed software asset value and portfolio expansion potential."
+    },
+    {
+      "name": "Natalia Costa",
+      "company": "CloudForge Ops",
+      "email": "platform@cloudforgeops.io",
+      "category": "Infrastructure platform buyer",
+      "current_stage_value": "USD 2M-7M",
+      "full_product_value": "USD 11M-18M",
+      "rationale": "Developer platform + infrastructure + delivery operational control."
+    },
+    {
+      "name": "Sami Rahman",
+      "company": "Summit Capital Partners",
+      "email": "investments@summitcapitalpartners.ca",
+      "category": "Financial buyer / strategic expansion",
+      "current_stage_value": "USD 1M-4M",
+      "full_product_value": "USD 10M-12M",
+      "rationale": "Strong platform story with expansion opportunities and recurring product value."
+    },
+    {
+      "name": "Martin Clarke",
+      "company": "Atlas Firmware",
+      "email": "cto@atlasfirmware.com",
+      "category": "Enterprise software buyer",
+      "current_stage_value": "USD 2M-7M",
+      "full_product_value": "USD 8M-18M",
+      "rationale": "AI engineering platform alignments with internal delivery modernization and governance."
+    },
+    {
+      "name": "Olivia Reed",
+      "company": "Acme AI Platform",
+      "email": "strategy@acmeai-platform.com",
+      "category": "AI platform expansion buyer",
+      "current_stage_value": "USD 3M-10M",
+      "full_product_value": "USD 15M-30M",
+      "rationale": "High strategic value if the product becomes an AI-native software delivery platform."
+    }
+  ]
+}
