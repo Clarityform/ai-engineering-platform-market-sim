@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import app as api_app
+from app.routes import router
 
 app = FastAPI(title="AI Engineering Platform", version="0.3.0")
 app.add_middleware(
@@ -13,8 +13,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.mount("/api", api_app)
+app.include_router(router)
 
 
 @app.get("/")
@@ -22,6 +21,7 @@ def index() -> dict:
     return {
         "name": "AI Engineering Platform",
         "status": "prototype",
+        "version": "0.3.0",
         "routes": [
             "/api/health",
             "/api/metrics",

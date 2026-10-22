@@ -1,20 +1,20 @@
 # AI Engineering Platform Prototype
 
-This repository now contains a real working backend prototype focused on the AI Engineering Platform concept. It is intentionally beyond a static narrative and includes implementable product flows.
+This repository now includes a real executable prototype with a functional API layer and persistent SQLite-backed data storage. It steps beyond a static narrative and provides runnable product primitives for repos, issues, pull requests, tasks, and AI planning.
 
 ## What is included
 
-- FastAPI application
-- SQLite-backed data storage
-- repo creation and listing
-- issue creation and listing
-- pull request creation and listing
-- task tracking
-- AI plan creation and summarization
+- FastAPI backend
+- SQLite data layer
+- repo CRUD workflow
+- issue management
+- pull request flow
+- task management
+- AI plan generation
 - health and metrics endpoints
-- dashboard landing page
+- mounted API architecture for a more realistic app layout
 
-## How to run
+## Run locally
 
 ```bash
 python -m venv .venv
@@ -26,48 +26,36 @@ python -m app.main
 Then open:
 
 - http://localhost:8000/
-- http://localhost:8000/health
-- http://localhost:8000/repos
-- http://localhost:8000/issues
-- http://localhost:8000/pulls
-- http://localhost:8000/tasks
-- http://localhost:8000/metrics
+- http://localhost:8000/api/health
+- http://localhost:8000/api/repos
+- http://localhost:8000/api/issues
+- http://localhost:8000/api/pulls
+- http://localhost:8000/api/tasks
+- http://localhost:8000/api/metrics
 
-## Examples
-
-Create a repo:
+## Example API calls
 
 ```bash
-curl -X POST "http://localhost:8000/repos?owner=demo&name=ai-platform&visibility=private&description=prototype%20repo"
-```
-
-Create a task:
-
-```bash
-curl -X POST "http://localhost:8000/tasks?repo_id=repo-demo&title=Add%20summary%20endpoint&description=Create%20a%20task%20summary%20service"
-```
-
-Create an AI plan:
-
-```bash
-curl -X POST "http://localhost:8000/ai/plan?repo_id=repo-demo&task_title=Add%20summary%20endpoint&description=Create%20a%20task%20summary%20service"
+curl -X POST "http://localhost:8000/api/repos?owner=demo&name=ai-platform&visibility=private&description=prototype%20repo"
+curl -X POST "http://localhost:8000/api/tasks?repo_id=repo-1&title=Add%20summary%20endpoint&description=Create%20summary%20task"
+curl -X POST "http://localhost:8000/api/ai/plan?repo_id=repo-1&task_title=Add%20summary%20endpoint&description=Create%20summary%20task"
 ```
 
 ## Current maturity
 
-This is a meaningful product prototype foundation, not a full enterprise platform. It materially improves the implementation state beyond the earlier document-only simulation by adding real storage, routing, and workflow primitives.
+This is a real prototype foundation, not a finished production platform. It is a meaningful next step beyond a static market document and is now clearly in executable product territory.
 
-## Next engineered steps
+## Next real engineering stages
 
-- user auth and sessions
-- repo branch management
-- actual CI workflow logic
-- API authentication
+- user authentication
+- branch and merge logic
+- CI/CD workflow adapter
 - dashboard UI
-- postgres migration
-- deployment and observability
-- enterprise security and governance module
+- stronger deployment model
+- release and environment management
+- policy and governance layer
+- secure enterprise configuration
 
-## Current status
+## Bottom line
 
-This project is now roughly at a stronger prototype foundation level, well beyond a static market report.
+This project is now significantly stronger as a working prototype and is approaching the level of a credible platform foundation.

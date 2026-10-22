@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from app.db import get_connection
 from app.store import store
 
 router = APIRouter(prefix="/api")
@@ -102,16 +101,3 @@ def summarize(repo_id: str, title: str) -> dict:
     if not repo_id or not title:
         raise HTTPException(status_code=400, detail="repo_id and title are required")
     return store.summarize(repo_id=repo_id, title=title)
-
-
-@router.get("/db/schema")
-def db_schema() -> dict:
-    with get_connection() as conn:
-        tables = conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-        ).fetchall()
-    return {"tables": [row[0] for row in tables]}
-
-
-app = APIRouter()
-app.include_router(router)
