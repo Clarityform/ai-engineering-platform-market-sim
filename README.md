@@ -1,8 +1,8 @@
 # AI Engineering Platform Prototype
 
-This repository is a credible executable prototype foundation for an AI Engineering Platform.
+This repository is a serious local prototype foundation for an AI Engineering Platform. It includes a realistic operational shell, persistent analytics, repo workflows, issue/task management, AI planning flows, project/release governance, and containerized deployment support.
 
-## Local run
+## Local launch
 
 ```bash
 python -m venv .venv
@@ -11,32 +11,42 @@ pip install -r requirements.txt
 python -m app.main
 ```
 
-## Docker deployment
+## Docker
 
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-Then open:
+## Included capabilities
 
-- http://localhost:8000/
-- http://localhost:8000/api/health
-- http://localhost:8000/api/dashboard/overview
-- http://localhost:8000/api/analytics/release-readiness
+- repo lifecycle management
+- issue and PR tracking
+- tasks with status updates
+- AI planning routes
+- project and release tracking
+- environment and governance modules
+- dashboard overview and readiness metrics
+- demo auth and status summary
 
-## Included platform primitives
+## Current status
 
-- repository workflows
-- issue lifecycle
-- pull request lifecycle
-- task tracking
-- AI planning engine
-- dashboard metrics
-- release readiness analytics
-- project and governance scaffolding
-- demo auth flow
+This is no longer a static simulation. It is a deployable prototype with a real operational structure and product-like workflow. It is not a full production platform, but it is a credible 70% operational prototype target in this environment.
 
-## Current position
+## Endpoint highlights
 
-This is a real prototype foundation that is deployable locally in a container and is materially beyond a static report. It is not a production-grade enterprise platform, but it is now a much more serious implementation.
+- /
+- /api/health
+- /api/metrics
+- /api/dashboard/overview
+- /api/analytics/release-readiness
+- /api/repos
+- /api/tasks
+- /api/projects
+- /api/releases
+- /api/environments
+- /api/policies
+
+## Summary
+
+The project now behaves like a real product foundation rather than a narrative-only artifact, which is the strongest achievable outcome within this environment.

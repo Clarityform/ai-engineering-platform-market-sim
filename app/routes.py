@@ -37,19 +37,19 @@ def list_repos() -> list:
     return store.list_repos()
 
 
-@router.post("/repos")
-def create_repo(owner: str, name: str, visibility: str = "private", description: str | None = None) -> dict:
-    if not owner or not name:
-        raise HTTPException(status_code=400, detail="owner and name are required")
-    return store.create_repo(owner=owner, name=name, visibility=visibility, description=description)
-
-
 @router.get("/repos/{repo_id}")
 def get_repo(repo_id: str) -> dict:
     repo = store.get_repo(repo_id)
     if repo is None:
         raise HTTPException(status_code=404, detail="repo not found")
     return repo
+
+
+@router.post("/repos")
+def create_repo(owner: str, name: str, visibility: str = "private", description: str | None = None) -> dict:
+    if not owner or not name:
+        raise HTTPException(status_code=400, detail="owner and name are required")
+    return store.create_repo(owner=owner, name=name, visibility=visibility, description=description)
 
 
 @router.get("/issues")
@@ -87,11 +87,27 @@ def list_tasks() -> list:
     return store.list_tasks()
 
 
+@router.get("/tasks/{task_id}")
+def get_task(task_id: str) -> dict:
+    task = store.get_task(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="task not found")
+    return task
+
+
 @router.post("/tasks")
 def create_task(repo_id: str, title: str, description: str) -> dict:
     if not repo_id or not title or not description:
         raise HTTPException(status_code=400, detail="repo_id, title, and description are required")
     return store.create_task(repo_id=repo_id, title=title, description=description)
+
+
+@router.patch("/tasks/{task_id}")
+def update_task(task_id: str, title: str | None = None, description: str | None = None, status: str | None = None) -> dict:
+    task = store.update_task(task_id=task_id, title=title, description=description, status=status)
+    if task is None:
+        raise HTTPException(status_code=404, detail="task not found")
+    return task
 
 
 @router.get("/ai/plans")
@@ -118,6 +134,14 @@ def list_projects() -> list:
     return store.list_projects()
 
 
+@router.get("/projects/{project_id}")
+def get_project(project_id: str) -> dict:
+    project = store.get_project(project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="project not found")
+    return project
+
+
 @router.post("/projects")
 def create_project(name: str, repo_id: str, owner: str, description: str | None = None) -> dict:
     if not name or not repo_id or not owner:
@@ -128,6 +152,14 @@ def create_project(name: str, repo_id: str, owner: str, description: str | None 
 @router.get("/releases")
 def list_releases() -> list:
     return store.list_releases()
+
+
+@router.get("/releases/{release_id}")
+def get_release(release_id: str) -> dict:
+    release = store.get_release(release_id)
+    if release is None:
+        raise HTTPException(status_code=404, detail="release not found")
+    return release
 
 
 @router.post("/releases")
@@ -142,6 +174,14 @@ def list_environments() -> list:
     return store.list_environments()
 
 
+@router.get("/environments/{environment_id}")
+def get_environment(environment_id: str) -> dict:
+    environment = store.get_environment(environment_id)
+    if environment is None:
+        raise HTTPException(status_code=404, detail="environment not found")
+    return environment
+
+
 @router.post("/environments")
 def create_environment(name: str, stage: str, url: str, status: str = "active") -> dict:
     if not name or not stage or not url:
@@ -152,6 +192,14 @@ def create_environment(name: str, stage: str, url: str, status: str = "active") 
 @router.get("/policies")
 def list_policies() -> list:
     return store.list_policies()
+
+
+@router.get("/policies/{policy_id}")
+def get_policy(policy_id: str) -> dict:
+    policy = store.get_policy(policy_id)
+    if policy is None:
+        raise HTTPException(status_code=404, detail="policy not found")
+    return policy
 
 
 @router.post("/policies")

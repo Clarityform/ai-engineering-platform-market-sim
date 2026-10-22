@@ -27,7 +27,7 @@ class SQLiteStore:
         if not repo:
             return
 
-        self.create_project(
+        project1 = self.create_project(
             name="AI Delivery Platform",
             repo_id=repo["id"],
             owner="demo",
@@ -40,8 +40,8 @@ class SQLiteStore:
             description="Developer workflow acceleration and repo intelligence improvements.",
         )
         self.create_release(
-            project_id=self.list_projects()[0]["id"],
-            version="v0.4.0",
+            project_id=project1["id"],
+            version="v0.5.0",
             status="active",
             notes="Prototype launch with governance and planning instrumentation.",
         )
@@ -155,6 +155,24 @@ class SQLiteStore:
         with get_connection() as conn:
             row = conn.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
         return dict(row) if row is not None else None
+
+    def update_task(self, task_id: str, title: Optional[str] = None, description: Optional[str] = None, status: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        task = self.get_task(task_id)
+        if task is None:
+            return None
+        if title is not None:
+            task["title"] = title
+        if description is not None:
+            task["description"] = description
+        if status is not None:
+            task["status"] = status
+        with get_connection() as conn:
+            conn.execute(
+                "UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?",
+                (task["title"], task["description"], task["status"], task_id),
+            )
+            conn.commit()
+        return self.get_task(task_id)
 
     def list_tasks(self) -> List[Dict[str, Any]]:
         with get_connection() as conn:
@@ -296,7 +314,7 @@ class SQLiteStore:
         releases = self.list_releases()
         environments = self.list_environments()
         policies = self.list_policies()
-        overview = {
+        return {
             "metrics": metrics,
             "projects": projects,
             "releases": releases,
@@ -307,11 +325,10 @@ class SQLiteStore:
                 "platform": "prototype-ready",
                 "release_gate": "enabled",
                 "governance": "enabled",
-                "ci": "pending",
-                "deployment": "pending",
+                "ci": "simulated",
+                "deployment": "simulated",
             },
         }
-        return overview
 
     def release_readiness(self) -> Dict[str, Any]:
         releases = self.list_releases()
