@@ -1,43 +1,41 @@
-# Roadmap: AI Engineering Platform
+# Roadmap and Go-to-Market Plan
 
 ## Phase 1: AI coding assistant
-- natural-language task execution
 - code generation
-- code explanation
-- test generation
-- IDE integrations
+- refactor suggestions
+- IDE integration
+- repo-aware coding support
 
-## Phase 2: repo-aware intelligence
+## Phase 2: repo intelligence
 - semantic search
-- code graph
-- repo understanding
+- dependency mapping
+- issue-to-code linkage
 - architecture summaries
-- ownership mapping
 
 ## Phase 3: workflow automation
-- issue automation
-- PR creation support
-- review summarization
-- CI health insights
+- PR generation
+- issue triage
+- review assistance
+- CI insight
 
-## Phase 4: release and deployment intelligence
-- deployment readiness assessment
+## Phase 4: release intelligence
+- deployment readiness scoring
 - rollback guidance
-- environment reasoning
 - release planning support
+- risk labeling
 
-## Phase 5: governance and enterprise controls
-- security policy enforcement
-- RBAC and SSO
-- audit logs
-- self-hosting support
+## Phase 5: governance and enterprise deployment
+- SSO and RBAC
+- policy controls
+- self-hosting
+- compliance packaging
 
-## Phase 6: full platform maturity
+## Phase 6: platform maturity
 - multi-team orchestration
-- advanced agentic workflows
-- policy-driven software delivery
-- enterprise-grade observability
+- enterprise rollout
+- premium service and support layer
+- strategic platform scale
 
-## Final strategic outcome
+## Final outcome
 
-The platform becomes the AI-native operating layer for software creation and delivery, with strong enterprise value and premium strategic appeal.
+The product becomes the AI-native operating system for software creation and delivery, with strong strategic value and multi-layer lock-in.
